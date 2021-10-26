@@ -316,3 +316,77 @@ show_sequential_floats(1.24)
 # [RoundNearest](https://docs.julialang.org/en/v1/base/math/#Base.Rounding.RoundNearest)
 # which rounds to the nearest available representable value, with ties 
 # rounded towards the nearest value with an **even** least significant bit.
+
+# Arbitrary Precision Arithmetic
+
+# Julia supports both arbitrary-precision integers and floating-point 
+# numbers by wrapping the 
+# [GNU Multiple Precision Arithmetic Library (GMP)](https://gmplib.org/)
+# and the [GNU MPFR Library](https://www.mpfr.org/), respectively. Julia
+# exposes these features through the `BigInt` and `BigFloat` types, 
+# respectively.
+#
+# Constructors exist to create these types from primitive numberical 
+# types. Additionally, the `big_str` macro or `parse` function construct 
+# them from values of `AbstractString` type. One can also use the `BigInt` 
+# type to construct `BigInt` values from integer literals. Note that the 
+# `Base` package **does not** define an unsigned arbitrary precision 
+# integer type (`BigInt` is sufficient in most cases). To define these 
+# values, use hexadecimal, octal or binary literals (in addition to 
+# decimal literals).
+#
+# Once created, arbitrary precision integers and floating point values 
+# participate in arithmetic with all other numeric types.
+
+BigInt(typemax(Int64)) + 1
+
+big"1234_5678_9012_3456_7890_1234_5678_90" + 1
+
+parse(BigInt, "123456789012345678901234567890") + 1
+
+string(big"2"^200, base=16)
+
+0x1000_0000_0000_0000_0000_0000_0000_0000_0-1
+
+0x0000_0000_0000_0000_0000_0000_0000_0000_0
+
+typeof(ans)
+
+big"1.23456789012345678901"
+
+parse(BigFloat, "1.23456789012345678001")
+
+BigFloat(2.0^66) / 3
+
+factorial(BigInt(40))
+
+# However, type promotion between the primitive types and 
+# `BigInt` / `BigFloat` is **not** automatic, but must be invoked
+# explicitly.
+
+x = typemin(Int64)
+x = x - 1
+typeof(x)
+
+y = BigInt(typemin(Int64))
+y = y - 1
+typeof(y)
+
+# The default precision (in number of bits of the significand) and 
+# rounding mode of `BigFloat` operations can be changed _globally_ by
+# calling `setprecision` and `setrounding`. All subsequent calculations 
+# will take these changes into account. Alternatively, the precision or 
+# the rounding can be changed within the execution of a particular 
+# `do` block.
+
+setrounding(BigFloat, RoundUp) do 
+    BigFloat(1) + parse(BigFloat, "0.1")
+end
+
+setrounding(BigFloat, RoundDown) do
+    BigFloat(1) + parse(BigFloat, "0.1")
+end
+
+setprecision(40) do 
+    BigFloat(1) + parse(BigFloat, "0.1")
+end
