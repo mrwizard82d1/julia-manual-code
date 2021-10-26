@@ -390,3 +390,70 @@ end
 setprecision(40) do 
     BigFloat(1) + parse(BigFloat, "0.1")
 end
+
+# Numeric Literal Coefficients
+
+# To make common numeric formulae and expressions clearer, Julia allows 
+# variables to be immediately (no intervening whitespace) preceded by a
+# numeric literal, implying multiplication. This makes writing polynomial
+# expressions much cleaner.
+
+x = 3
+
+2x^2 - 3x + 1
+
+1.5x^2 - .5x + 1
+
+# It also makes writing exponential functions more elegant.
+
+2^2x
+
+# The precedence of numeric literal coefficients is slightly lower than 
+# that of unary operations such as negation. As a result, -2x is parsed
+# as (-2) * x and √2x is parsed as (√2) * x. However, numeric literal
+# coefficients parse similarly to unary operators when combined with 
+# exponentiation. For example `2^3x` is parsed as 2^(3x) and `2x^3` is
+# parsed as 2*(x^3).
+#
+# Numeric literals also work as coefficients to parenthesized expressions.
+
+2(x-1)^2 - 3(x-1) + 1
+
+# Additionally, parenthesized expressions can be used as coefficients to 
+# variables, implying multiplication of the expression by the variable.
+
+(x - 1)x
+
+# Neither juxtaposition of two parenthesized expressions, nor placing a 
+# variable before a parenthesized expressions, however, can be used to
+# imply multiplication.
+
+(x - 1)(x + 1)
+
+x(x + 1)
+
+# Syntax Conflicts
+
+# Juxtaposed literal coefficient syntax may conflict with some numeric 
+# literal syntaxes: hexadecimal, octal and binary integer literals and
+# engineering notation for floating point literals.
+# 
+# In all cases, the ambiguity is resolved in favor of interpretation as
+# numeric literals. Expressions starting with
+#
+# - `0x`/`0o`/`0b` are always hexadecimal/octal/binary literals
+# - A numeric literal followed by `e` or `E` are always floating-point 
+#   literals
+# - A numeric literal followed by `f` are always 32-bit floating-point 
+#   literals
+
+# Literal zero and one
+
+# Julia provides functions which return literal 0 and 1 correspond to a 
+# specified type or the type of a given variable
+
+zero(Float32)
+zero(1.0)
+zero(x)
+one(Int32)
+one(BigFloat)
