@@ -108,3 +108,105 @@ typeof(x)
 
 x *= 2
 typeof(x)
+
+# Vectorized "dot" operators
+
+# For every binary operation like `^`, there exists a 
+# corresponding "dot" operation, for example, `.^`, that 
+# _automatically_ defined to perform `^` element-by-element on 
+# arrays. For example, `[1, 2, 3] ^ 3` is *not* defined since 
+# there is no mathematical meaning to "cubing" a (non-square) 
+# array. However, `[1, 2, 3] .^ 3` *is* defined as computing the 
+# elementwise (or "vectorized") result; in other words, 
+# `[1 ^ 3, 2 ^ 3, 3 ^ 3]`. Similarly for unary operations like 
+# `!` or `√`, there is a corresponding operator like `.!` and 
+# `.√` these corresponding operators apply the (basic) operator 
+# elementwise.
+
+[1, 2, 3] .^ 3
+
+# Numeric comparisons
+
+1 == 1
+1 == 2
+1 != 2
+# Unclear how to enter alternate not equal operator
+1 == 1.0
+1 < 2
+1.0 < 3
+1 >= 1.0
+# Unclear how to enter alternate greater than or equal to 
+# operator
+-1 <= 1
+# Unclear how to enter alternate less than or equal to operator
+-1 <= -1
+-1 <= -2
+3 < -0.5
+
+# Remember that the comparison behavior of `NaN` may be 
+# surprising
+
+NaN == NaN
+NaN != NaN
+NaN < NaN
+NaN > NaN
+
+# The behavior of `NaN` can cause headaches when operating with
+# arrays
+[1 NaN] == [1 NaN]
+
+# Julia provides additional functions to test numbers for 
+# special values. These additional functions can be useful in 
+# hash key comparisions
+
+# x and y are identical
+x = 3
+y = 3.0
+isequal(x , y)
+isequal(3, nextfloat(y))
+isfinite(x)
+isfinite(-Inf)
+isinf(x)
+isinf(Inf)
+isnan(x)
+isnan(NaN)
+
+# In particular, `isequal` considers all `NaN` values to be 
+# equal.
+isequal(Inf / Inf, 0 * -Inf)
+isequal([1 NaN], [1 NaN])
+isequal(NaN, NaN32)
+
+# `isequal` *distinguishes* between signed and unsigned zero.
+0.0 == -0.0
+isequal(0.0, -0.0)
+
+# Chaining comparisons
+
+# Similar to Python, Julia supports chaining comparisons 
+# arbitrarily.
+
+1 < 2 <= 2 < 3 == 3 > 2 >= 1 < 3 != 5
+
+# Note that chained operations use `&&` for scalar comparisons
+# and `&` for elementwise comparisons. This definition allows
+# one to use chained comparisons with arrays. For example, 
+# `0 .< A .< 1` results in a boolean array whose elements are 
+# true when the element of `A` is between 0 and 1.
+
+# Chained comparisons include an optimization in that each value 
+# in the chain is only computed once.
+v(x) = (println(x); x)  # note the printing side effect
+
+v(1) < v(2) <= v(3)
+
+# Because of short-circuiting, not all values need to be 
+# computed.
+v(1) > v(2) <= v(3)
+
+# BEWARE: the actual order of evaluations in a chained comparison
+# is *undefined*. Consequently, it is strongly recommended that 
+# expressions with side-effects (such as printing) *not* be used
+# in chained comparisons. If side effects are required, then 
+# explicitly using the short-circuit operator `&&` is 
+# recommended.
