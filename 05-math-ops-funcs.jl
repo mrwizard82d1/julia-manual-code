@@ -210,3 +210,45 @@ v(1) > v(2) <= v(3)
 # in chained comparisons. If side effects are required, then 
 # explicitly using the short-circuit operator `&&` is 
 # recommended.
+
+# Operator precedence and associativity
+
+# One can find the numerical precedence for operators using the 
+# built-in function, `Base.operator_precedence`. Higher numbers
+# have higher precedence. 
+
+Base.operator_precedence(:+), Base.operator_precedence(:*), Base.operator_precedence(:.)
+
+# An undefined operator
+try
+    Base.operator(:sin)
+catch ex
+    if isa(ex, UndefVarError)
+        println(ex)
+    end
+end
+
+# Note the necessary parentheses on `:(=)`
+Base.operator_precedence(:+=), Base.operator_precedence(:(=))
+
+# A symbol representing the operator associativity can also be 
+# found by calling the built-in function 
+# `Base.operator_associativity`.
+Base.operator_associativity(:-), Base.operator_associativity(:+), Base.operator_associativity(:*)
+
+# Invalid operators, such as :sin, return :none 
+Base.operator_associativity(:⊗), Base.operator_associativity(:sin), Base.operator_associativity(:→)
+
+# Again, numeric literal coefficients, e.g., `2x`, are treated 
+# as multiplication with higher precedence than any binary 
+# operator, with the exception of `^` where they have higher 
+# precedence only as the exponent.
+
+x = 3; 2x^2
+
+x = 3; 2^2x
+
+# Juxtaposition parses like a unary operator, which has the 
+# same natural asymmetry around exponents: `-x^y` and `2x^y`
+# parse as `-(x^y)` and `2(x^y)` whereas `x^-y` and `x^2y`
+# parse as `x^(-y)` nad `x^(2y)`
