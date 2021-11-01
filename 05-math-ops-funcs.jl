@@ -252,3 +252,86 @@ x = 3; 2^2x
 # same natural asymmetry around exponents: `-x^y` and `2x^y`
 # parse as `-(x^y)` and `2(x^y)` whereas `x^-y` and `x^2y`
 # parse as `x^(-y)` nad `x^(2y)`
+
+# Numerical conversions
+
+# Julia supports three forms of numerical conversion, which 
+# differ in their handling of inexact conversions.
+
+# Both `T(x)` and `convert(T, x)` converts `x` to a value of 
+# type `T`.
+
+# If `T` is a floating point type, the result is the nearest
+# representable value, which could be positive or negative
+# infinity.
+# If `T` is an integer type, an `InexactError` is raised if `x`
+# is not representable by `T`.
+
+# The expression `x % T` converts an integer `x` to a value of
+# integer type `T` congruent to `x modulo 2^n` where `n` is the
+# number of bits in `T`. In other words, the binary 
+# representation of `x` is truncated to fit in `T`.
+
+# Finally, the 
+# [Rounding functions](https://docs.julialang.org/en/v1/manual/mathematical-operations/#Rounding-functions)
+# take a type, `T` as an optional argument. For example, 
+# `round(Int, x)` is a shorthand for `Int(round(x))`.
+
+# Here are some examples:
+
+Int8(127)
+Int8(128)
+Int8(127.0)
+Int8(3.14)
+Int8(128.0)
+
+127 % Int8
+128 % Int8
+round(Int8, 127.4)
+round(Int8, 127.6)
+
+# See 
+# [Conversion and Promotion](https://docs.julialang.org/en/v1/manual/conversion-and-promotion/#conversion-and-promotion)
+# for how to define your own conversions and promotions.
+
+# Rounding functions
+
+# To nearest integer
+round(1.4)
+round(1.5)
+round(1.6)
+
+# Of type `T` (`Int8`) in our examples
+round(Int8, 1.4)
+round(Int8, 1.5)
+round(Int8, 1.6)
+
+# Round `x` toward `-Inf`
+floor(1.4)
+floor(1.5)
+floor(1.6)
+
+# Of type `T` (`Int8` in these examples)
+floor(Int8, 1.4)
+floor(Int8, 1.5)
+floor(Int8, 1.6)
+
+# Round `x` toward `+Inf`
+ceil(1.4)
+ceil(1.5)
+ceil(1.6)
+
+# Of type `T` (`Int8` in these examples)
+ceil(Int8, 1.4)
+ceil(Int8, 1.5)
+ceil(Int8, 1.6)
+
+# Round `x` toward 0
+trunc(1.4)
+trunc(1.5)
+trunc(1.6)
+
+# Of type `T` (`Int8` in these examples)
+trunc(Int8, 1.4)
+trunc(Int8, 1.5)
+trunc(Int8, 1.6)
