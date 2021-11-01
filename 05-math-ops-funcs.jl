@@ -335,3 +335,95 @@ trunc(1.6)
 trunc(Int8, 1.4)
 trunc(Int8, 1.5)
 trunc(Int8, 1.6)
+
+# Division functions
+
+div(5, 2) # truncate division; quotient rounded toward zero
+fld(5, 2) # floored division; quotient rounded toward `-Inf`
+cld(5, 2) # ceiling division; quotient rounded towa+rd `+Inf`
+
+# Remainder. Satisfies `x == div(x, y) * y + rem(x, y)`. Sign
+# matches `x`
+rem(5, 5)
+
+# Modulus. Satisfiesd `x == fld(x, y) * y + mod(x, y)`. Sign
+# matches `y`.
+mod(5, 2)
+
+# `mod` with offset 1. Returns r ∈ (0, y] for y > 0 or 
+# r ∈ [y, 0) for y < 0, where `mod(r, y)` == mod(x, y)
+mod1(5, 2)
+
+# Modulus with respect to 2π; 0 <= mod2pi(x) < 2π
+mod2pi(2π + 1)
+
+# `divrem(x, y)` returns `(div(x, y), rem(x, y))`
+divrem(5, 2)
+
+# `fldmod(x, y) returns `(fld(x, y), mod(x, y))`
+fldmod(5, 2)
+
+# `gcd(x, y, ...)` greatest positive common divisor of 
+# `x`, `y`, ...
+gcd(60, 24, 3)
+
+# `lcm(x, y, ...)` least positive common divisor of
+# `x`, `y`, ...
+lcm(2, 3, 12)
+
+# Sign and absolute value functions
+
+abs(-3.14)
+abs2(-3.14) # Squared magnitude of `x`
+sign(-3.14) # Returns -1, 0, or +1
+sign(0)
+sign(3.14)
+signbit(-3.14) # True if the sign bit is on
+signbit(0) # False of the sign bit is off
+signbit(3.14)
+copysign(1.414, 3.14) # A value with the magnitude of `x` and
+copysign(1.414, -3.14) # the sign of `y`
+flipsign(1.414, 3.14) # A value with the magnitude of `x` and
+flipsign(1.414, -3.14) # the sign of `x * y`
+
+# Powers, logs and roots
+
+sqrt(2.0)
+√2.0
+cbrt(2)
+∛(2)
+hypot(3., 4.)
+exp(2π) # e^2π
+expm1(1e-29) # `exp` for `x` near 0
+# `x*2^n` computed efficiently for integer values of `n`
+ldexp(3.5, 6) 
+log(2π)
+log(2, π) # log(b, x): log base `b` of `x`
+log2(3.14) # log base 2 of `x`
+log10(3.14) # log base 10 of `x`
+log1p(1e-29) # Accurate `log(1 + x)` for `x` near 0
+exponent(3.14) # Binary exponent of `x`
+# Binary significand (a.k.a. mantissa) of a floating-point
+# number, `x`
+significand(3.14)
+
+# Trigonometric and hyperbolic functions
+
+# All the standard trigonometric and hyperbolic functions 
+# are defined. They are all single argument functions;
+# however, `atan` also accepts two arguments corresponding to a
+# traditional `atan2` function.
+
+# Additionally, `sinpi(x)` and `cospi(x)` are provided for more
+# accurate computations of `sin(π * x)` and `cos(π * x)`, 
+# respectively.
+
+# In order to compute trigonometric functions with degrees 
+# instead of radians, suffix the function with 'd'. For example,
+# `sind(x)` computes the sine of `x` where `x` is specified in 
+# degrees. 
+
+# Special functions
+
+# Many other special mathematical functions are provided by the
+# package, `SpecialFunctions.jl`.
